@@ -1,0 +1,10 @@
+[Unit]
+Description=Phosphor U-Boot environment mgr, device tree -> dbus daemon
+
+[Service]
+ExecStart=/usr/bin/phosphor-u-boot-env-devtree-daemon
+Type=dbus
+BusName=xyz.openbmc_project.U_Boot.Environment.DevTreeDaemon
+
+[Install]
+WantedBy=basic.target
