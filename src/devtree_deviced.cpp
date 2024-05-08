@@ -36,8 +36,8 @@ DevTreeDaemon::DevTreeDaemon(
     std::string nodeBasePath = "/sys/";
     std::string nodeFullPath; // will hold an absolute path to the node
     std::string nodeHandle;   // TODO: for filename alone (strip out everything
-                            // except whatever is inside a pair of '/' marks,
-                            // explicit or implied)
+                              // except whatever is inside a pair of '/' marks,
+                              // explicit or implied)
 
     std::vector<std::pair<std::string, std::string>> nodeInputs = {
         {"model", "model"},
