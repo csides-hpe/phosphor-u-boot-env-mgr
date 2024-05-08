@@ -1,5 +1,5 @@
 /*
-// Copyright (c) 2019 Intel Corporation
+// Copyright (c) 2024 Hewlett Packard Enterprise
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,9 +22,6 @@
 #include <vector>
 #include <fstream>
 #include <xyz/openbmc_project/Common/error.hpp>
-
-//template <typename... ArgTypes>
-//think this (template above) applied only to an 'execcuse command' function
 
 DevTreeDaemon::DevTreeDaemon(boost::asio::io_service& io_,
                          sdbusplus::asio::object_server& srv_,

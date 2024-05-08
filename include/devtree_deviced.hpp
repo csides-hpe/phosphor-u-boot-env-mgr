@@ -1,5 +1,5 @@
 /*
-// Copyright (c) 2019 Intel Corporation
+// Copyright (c) 2024 Hewlett Packard Enterprise
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 static constexpr const char* DevTreeDaemonServiceName =
     "xyz.openbmc_project.U_Boot.Environment.DevTreeDaemon";
 static constexpr const char* DevTreeDaemonIface =
-    "xyz.openbmc_project.U_Boot.Environment.DaemonManager";
+    "xyz.openbmc_project.U_Boot.Environment.DevTreeDaemon";
 static constexpr const char* DevTreeDaemonPath =
     "/xyz/openbmc_project/u_boot/environment/dtdaemon";
 
