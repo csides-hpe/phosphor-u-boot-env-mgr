@@ -34,10 +34,6 @@ DevTreeDaemon::DevTreeDaemon(
     iface = server.add_interface(DevTreeDaemonPath, DevTreeDaemonIface);
 
     std::string nodeBasePath = "/sys/";
-    std::string nodeFullPath; // will hold an absolute path to the node
-    std::string nodeHandle;   // TODO: for filename alone (strip out everything
-                              // except whatever is inside a pair of '/' marks,
-                              // explicit or implied)
 
     std::vector<std::pair<std::string, std::string>> nodeInputs = {
         {"model", "model"},
@@ -45,31 +41,22 @@ DevTreeDaemon::DevTreeDaemon(
         {"mac-address", "mac2"},
         {"serial-number", "serial-number"}};
 
-    // iterate through all supported nodes
+    // iterate over supported nodes
     for (std::pair<std::string, std::string> nodeData :
-         nodeInputs) // so we can modify the contents of nodeData
+         nodeInputs) 
     {
         std::string nodeRelativePath = nodeData.first;
+        std::string nodeFullPath = nodeBasePath + nodeRelativePath;
         std::string nodeValue;
-        nodeFullPath = nodeBasePath + nodeRelativePath;
-
-        // TODO: strip any '/' character from the end of the string, then strip
-        // everything up to the 'last' / in the string this code will work fine
-        // as-is as long as only 'simple' node paths are used
-        nodeHandle =
-            nodeRelativePath; // temporary, replace this later with something
-                              // that actually looks at the string and strips
-                              // things out (for more complex paths)
-
+        
         std::ifstream fruStream;
         fruStream.open(nodeFullPath);
         if (!fruStream || !std::getline(fruStream, nodeValue))
             continue;
 
+        //dtree node was sucessfully read, write the data to dbus
         std::string dBuspropertyName = nodeData.second;
         iface->register_property(dBuspropertyName, nodeValue);
-
-        // if file exists, then read string @ first, then write data to @ secon
     }
 
     iface->initialize(true);
