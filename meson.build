@@ -8,7 +8,7 @@ project(
     ],
     license: 'Apache-2.0',
     version: '0.1',
-    meson_version: '>=0.58.0',
+    meson_version: '>=0.57.0',
 )
 add_project_arguments('-Wno-psabi',          	#no idea what this line is about or where it came from                     
     '-DBOOST_ERROR_CODE_HEADER_ONLY',
@@ -19,7 +19,7 @@ add_project_arguments('-Wno-psabi',          	#no idea what this line is about o
     '-DBOOST_ASIO_DISABLE_THREADS',
  language: 'cpp')
 
-boost = dependency('boost', version: '>=1.83.0', include_type: 'system', required : true)
+boost = dependency('boost', version: '>=1.75.0', include_type: 'system', required : true)
 sdbusplus = dependency('sdbusplus', include_type: 'system', required : true)
 dbusinterface = dependency('phosphor-dbus-interfaces', include_type: 'system', required : true)
 phosphor_logging_dep = dependency('phosphor-logging', required : true)
