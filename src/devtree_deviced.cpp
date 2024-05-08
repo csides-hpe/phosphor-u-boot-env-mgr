@@ -42,19 +42,18 @@ DevTreeDaemon::DevTreeDaemon(
         {"serial-number", "serial-number"}};
 
     // iterate over supported nodes
-    for (std::pair<std::string, std::string> nodeData :
-         nodeInputs) 
+    for (std::pair<std::string, std::string> nodeData : nodeInputs)
     {
         std::string nodeRelativePath = nodeData.first;
         std::string nodeFullPath = nodeBasePath + nodeRelativePath;
         std::string nodeValue;
-        
+
         std::ifstream fruStream;
         fruStream.open(nodeFullPath);
         if (!fruStream || !std::getline(fruStream, nodeValue))
             continue;
 
-        //dtree node was sucessfully read, write the data to dbus
+        // dtree node was sucessfully read, write the data to dbus
         std::string dBuspropertyName = nodeData.second;
         iface->register_property(dBuspropertyName, nodeValue);
     }
