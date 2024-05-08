@@ -26,22 +26,26 @@ static constexpr const char* DevTreeDaemonIface =
 static constexpr const char* DevTreeDaemonPath =
     "/xyz/openbmc_project/u_boot/environment/dtdaemon";
 
-static constexpr const char* DevTreeVPDIface = 
+static constexpr const char* DevTreeVPDIface =
     "xyz.openbmc_project.MachineContext";
-static constexpr const char* DevTreeVPDPath = 
+static constexpr const char* DevTreeVPDPath =
     "/xyz/openbmc_project/machinecontext";
 
-
-//maybe have .first be the full path and another field for the property name to display as? perhaps as a path?
+// maybe have .first be the full path and another field for the property name to
+// display as? perhaps as a path?
 /*
 static constexpr const std::vector<
-                        std::pair<std::string, std::string>> nodeInputs = { {"model", "model"}, 
-                                                                            {"local-mac-address", "mac1"}, 
-                                                                            {"mac-address", "mac2"}, 
-                                                                            {"serial-number", "serial-number"}
+                        std::pair<std::string, std::string>> nodeInputs = {
+{"model", "model"},
+                                                                            {"local-mac-address",
+"mac1"},
+                                                                            {"mac-address",
+"mac2"},
+                                                                            {"serial-number",
+"serial-number"}
                                                                       }
   */
-  
+
 class DevTreeDaemon
 {
     boost::asio::io_service& io;
@@ -49,11 +53,12 @@ class DevTreeDaemon
     std::shared_ptr<sdbusplus::asio::connection> conn;
     std::shared_ptr<sdbusplus::asio::dbus_interface> iface;
 
-    //Note: may want to create a function for refreshing data from device-tree (but probably reaaaally don't need it for now, so skip it and 
-    //consider it for later on)
+    // Note: may want to create a function for refreshing data from device-tree
+    // (but probably reaaaally don't need it for now, so skip it and consider it
+    // for later on)
 
   public:
     DevTreeDaemon(boost::asio::io_service& io,
-                sdbusplus::asio::object_server& srv,
-                std::shared_ptr<sdbusplus::asio::connection>& conn);
+                  sdbusplus::asio::object_server& srv,
+                  std::shared_ptr<sdbusplus::asio::connection>& conn);
 };
