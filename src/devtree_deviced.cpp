@@ -14,7 +14,7 @@
 // limitations under the License.
 */
 
-#include "devtree_daemon.hpp"
+#include "devtree_deviced.hpp"
 #include <phosphor-logging/log.hpp>
 #include <phosphor-logging/elog-errors.hpp>
 #include <boost/process/child.hpp>
