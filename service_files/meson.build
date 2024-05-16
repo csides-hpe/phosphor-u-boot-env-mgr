@@ -5,7 +5,7 @@ systemd_system_unit_dir = systemd.get_variable(
 )
 
 unit_files = [
-    ['phosphor-u-boot-env-mgr', 'xyz.openbmc_project.U_Boot.Environment.Manager.service'],
+    ['phosphor-u-boot-env-mgrd', 'xyz.openbmc_project.U_Boot.Environment.Manager.service'],
     ['devtree-nodesd', 'xyz.openbmc_project.U_Boot.Environment.DevTreeNodesd.service'],
 ]
 

@@ -1,4 +1,4 @@
-if get_option('phosphor-u-boot-env-mgr').allowed()
+if get_option('phosphor-u-boot-env-mgrd').allowed()
     executable(
         'phosphor-u-boot-env-mgr',
         'u-boot-env-mgr.cpp',
