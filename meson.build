@@ -35,4 +35,4 @@ incdir = include_directories('include')
 
 subdir('src')
 subdir('include')
-subdir('services')
+subdir('service_files')

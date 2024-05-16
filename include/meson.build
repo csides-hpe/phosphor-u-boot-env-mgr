@@ -1,1 +1,1 @@
-install_headers('u-boot-env-mgr.hpp', 'devtree_deviced.hpp')
+install_headers('u-boot-env-mgr.hpp', 'devtree-nodesd.hpp')

@@ -14,7 +14,7 @@
 // limitations under the License.
 */
 
-#include "devtree_deviced.hpp"
+#include "devtree-nodesd.hpp"
 
 #include <boost/process/child.hpp>
 #include <boost/process/io.hpp>
@@ -25,7 +25,7 @@
 #include <fstream>
 #include <vector>
 
-DevTreeDaemon::DevTreeDaemon(
+DevTreeNodesDaemon::DevTreeNodesDaemon(
     boost::asio::io_service& io_, sdbusplus::asio::object_server& srv_,
     std::shared_ptr<sdbusplus::asio::connection>& conn_) :
     io(io_),
@@ -68,7 +68,7 @@ int main()
     conn->request_name(MachineContextServiceName);
     sdbusplus::asio::object_server server(conn);
 
-    DevTreeDaemon devTreeDaemon(io, server, conn);
+    DevTreeNodesDaemon devTreeNodesDaemon(io, server, conn);
 
     io.run();
 

@@ -28,7 +28,7 @@ static constexpr const char* MachineContextPath =
 
 static constexpr const char* nodeBasePath = "/proc/device-tree/"; 
 
-class DevTreeDaemon
+class DevTreeNodesDaemon
 {
     boost::asio::io_service& io;
     sdbusplus::asio::object_server& server;
@@ -36,7 +36,7 @@ class DevTreeDaemon
     std::shared_ptr<sdbusplus::asio::dbus_interface> iface;
 
   public:
-    DevTreeDaemon(boost::asio::io_service& io,
+    DevTreeNodesDaemon(boost::asio::io_service& io,
                   sdbusplus::asio::object_server& srv,
                   std::shared_ptr<sdbusplus::asio::connection>& conn);
 };
