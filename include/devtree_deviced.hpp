@@ -19,17 +19,14 @@
 #include <boost/asio/io_service.hpp>
 #include <sdbusplus/asio/object_server.hpp>
 
-static constexpr const char* DevTreeDaemonServiceName =
-    "xyz.openbmc_project.U_Boot.Environment.DevTreeDaemon";
-static constexpr const char* DevTreeDaemonIface =
-    "xyz.openbmc_project.U_Boot.Environment.DevTreeDaemon";
-static constexpr const char* DevTreeDaemonPath =
-    "/xyz/openbmc_project/u_boot/environment/dtdaemon";
-
-static constexpr const char* DevTreeVPDIface =
+static constexpr const char* MachineContextServiceName =
     "xyz.openbmc_project.MachineContext";
-static constexpr const char* DevTreeVPDPath =
+static constexpr const char* MachineContextIface =
+    "xyz.openbmc_project.MachineContext";
+static constexpr const char* MachineContextPath =
     "/xyz/openbmc_project/machinecontext";
+
+static constexpr const char* nodeBasePath = "/proc/device-tree/"; 
 
 class DevTreeDaemon
 {

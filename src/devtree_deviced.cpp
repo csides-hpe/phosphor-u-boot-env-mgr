@@ -31,18 +31,18 @@ DevTreeDaemon::DevTreeDaemon(
     io(io_),
     server(srv_), conn(conn_)
 {
-    iface = server.add_interface(DevTreeDaemonPath, DevTreeDaemonIface);
-
-    std::string nodeBasePath = "/sys/";
-
-    std::vector<std::pair<std::string, std::string>> nodeInputs = {
+    //Check if these device-tree nodes are present and populated
+    //supportedNodes pair: <node name, dbus property name>
+    std::vector<std::pair<std::string, std::string>> supportedNodes = {
         {"model", "model"},
         {"local-mac-address", "mac1"},
         {"mac-address", "mac2"},
         {"serial-number", "serial-number"}};
 
+    iface = server.add_interface(MachineContextPath, MachineContextIface);
+
     // iterate over supported nodes
-    for (std::pair<std::string, std::string> nodeData : nodeInputs)
+    for (std::pair<std::string, std::string> nodeData : supportedNodes)
     {
         std::string nodeRelativePath = nodeData.first;
         std::string nodeFullPath = nodeBasePath + nodeRelativePath;
@@ -53,7 +53,7 @@ DevTreeDaemon::DevTreeDaemon(
         if (!fruStream || !std::getline(fruStream, nodeValue))
             continue;
 
-        // dtree node was sucessfully read, write the data to dbus
+        // dtree node was sucessfully read, write the data to dbus under given property name
         std::string dBuspropertyName = nodeData.second;
         iface->register_property(dBuspropertyName, nodeValue);
     }
@@ -65,7 +65,7 @@ int main()
 {
     boost::asio::io_service io;
     auto conn = std::make_shared<sdbusplus::asio::connection>(io);
-    conn->request_name(DevTreeDaemonServiceName);
+    conn->request_name(MachineContextServiceName);
     sdbusplus::asio::object_server server(conn);
 
     DevTreeDaemon devTreeDaemon(io, server, conn);
