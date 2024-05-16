@@ -1,5 +1,20 @@
-SRC_FILES = ['mainapp.cpp', 'u-boot-env-mgr.cpp']
-executable('phosphor-u-boot-env-mgr', sources : SRC_FILES, include_directories : incdir, dependencies : default_deps, install: true)
+if get_option('phosphor-u-boot-env-mgr').allowed()
+    executable(
+        'phosphor-u-boot-env-mgr',
+        'u-boot-env-mgr.cpp',
+        'mainapp.cpp',
+        include_directories : incdir,
+        dependencies: default_deps,
+        install: true,
+    )
+endif
 
-dSRC_FILES = ['devtree-nodesd.cpp']
-executable('phosphor-u-boot-env-devtree-nodesd', sources : dSRC_FILES, include_directories : incdir, dependencies : default_deps, install: true)
+if get_option('devtree-nodesd').allowed()
+    executable(
+        'phosphor-u-boot-env-devtree-nodesd',
+        'devtree-nodesd.cpp',
+        include_directories : incdir,
+        dependencies: default_deps,
+        install: true,
+    )
+endif

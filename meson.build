@@ -8,7 +8,7 @@ project(
     ],
     license: 'Apache-2.0',
     version: '0.1',
-    meson_version: '>=0.57.0',
+    meson_version: '>=0.64.0',
 )
 add_project_arguments('-Wno-psabi',          	#no idea what this line is about or where it came from                     
     '-DBOOST_ERROR_CODE_HEADER_ONLY',

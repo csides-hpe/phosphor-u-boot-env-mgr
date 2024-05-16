@@ -1,8 +1,21 @@
-systemd_dep = dependency('systemd')
-SYSTEMD_SYSTEM_UNIT_DIR = systemd_dep.get_pkgconfig_variable('systemdsystemunitdir')
+systemd = dependency('systemd')
+systemd_system_unit_dir = systemd.get_variable(
+    'systemdsystemunitdir',
+    pkgconfig_define: ['prefix', get_option('prefix')],
+)
 
-ENV_SERVICE_FILE = 'xyz.openbmc_project.U_Boot.Environment.Manager.service'
-configure_file(copy: true, input: ENV_SERVICE_FILE, install: true, install_dir: SYSTEMD_SYSTEM_UNIT_DIR, output: ENV_SERVICE_FILE)
+unit_files = [
+    ['phosphor-u-boot-env-mgr', 'xyz.openbmc_project.U_Boot.Environment.Manager.service'],
+    ['devtree-nodesd', 'xyz.openbmc_project.U_Boot.Environment.DevTreeNodesd.service'],
+]
 
-ENV_DAEMON_FILE = 'xyz.openbmc_project.U_Boot.Environment.DevTreeNodesd.service'
-configure_file(copy: true, input: ENV_DAEMON_FILE, install: true, install_dir: SYSTEMD_SYSTEM_UNIT_DIR, output: ENV_DAEMON_FILE)
+fs = import('fs')
+foreach tuple : unit_files
+    if get_option(tuple[0]).allowed()
+        fs.copyfile(
+            tuple[1],
+            install: true,
+            install_dir: systemd_system_unit_dir,
+        )
+    endif
+endforeach

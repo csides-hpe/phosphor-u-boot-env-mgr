@@ -32,7 +32,7 @@ DevTreeNodesDaemon::DevTreeNodesDaemon(
     server(srv_), conn(conn_)
 {
     //Check if these device-tree nodes are present and populated
-    //supportedNodes pair: <node name, dbus property name>
+    //supportedNodes pair: <node name, dbus property (display) name>
     std::vector<std::pair<std::string, std::string>> supportedNodes = {
         {"model", "model"},
         {"local-mac-address", "mac1"},
