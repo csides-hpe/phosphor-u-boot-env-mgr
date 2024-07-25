@@ -16,27 +16,12 @@
 
 #pragma once
 
-#include <boost/asio/io_service.hpp>
-#include <sdbusplus/asio/object_server.hpp>
-
 static constexpr const char* MachineContextServiceName =
     "xyz.openbmc_project.MachineContext";
 static constexpr const char* MachineContextIface =
     "xyz.openbmc_project.MachineContext";
-static constexpr const char* MachineContextPath =
+static constexpr const char* MachineContextInstancePath =
     "/xyz/openbmc_project/machinecontext";
 
 static constexpr const char* nodeBasePath = "/proc/device-tree/"; 
 
-class DevTreeNodesDaemon
-{
-    boost::asio::io_service& io;
-    sdbusplus::asio::object_server& server;
-    std::shared_ptr<sdbusplus::asio::connection> conn;
-    std::shared_ptr<sdbusplus::asio::dbus_interface> iface;
-
-  public:
-    DevTreeNodesDaemon(boost::asio::io_service& io,
-                  sdbusplus::asio::object_server& srv,
-                  std::shared_ptr<sdbusplus::asio::connection>& conn);
-};

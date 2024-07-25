@@ -2,7 +2,7 @@
 Description=Phosphor U-Boot environment mgr, device tree -> dbus daemon
 
 [Service]
-ExecStart=/usr/bin/phosphor-u-boot-env-devtree-nodesd
+ExecStart=/usr/bin/phosphor-u-boot-env-machinecontextd
 Type=dbus
 BusName=xyz.openbmc_project.MachineContext
 

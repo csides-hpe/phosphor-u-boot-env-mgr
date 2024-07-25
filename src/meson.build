@@ -9,10 +9,10 @@ if get_option('phosphor-u-boot-env-mgrd').allowed()
     )
 endif
 
-if get_option('devtree-nodesd').allowed()
+if get_option('phosphor-u-boot-env-machinecontextd').allowed()
     executable(
-        'phosphor-u-boot-env-devtree-nodesd',
-        'devtree-nodesd.cpp',
+        'phosphor-u-boot-env-machinecontextd',
+        'machinecontextd.cpp',
         include_directories : incdir,
         dependencies: default_deps,
         install: true,
