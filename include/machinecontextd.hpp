@@ -16,12 +16,5 @@
 
 #pragma once
 
-static constexpr const char* MachineContextServiceName =
-    "xyz.openbmc_project.MachineContext";
-static constexpr const char* MachineContextIface =
-    "xyz.openbmc_project.MachineContext";
-static constexpr const char* MachineContextInstancePath =
-    "/xyz/openbmc_project/machinecontext";
-
 static constexpr const char* nodeBasePath = "/proc/device-tree/"; 
 

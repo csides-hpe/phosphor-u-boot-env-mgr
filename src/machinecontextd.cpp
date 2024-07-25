@@ -29,9 +29,9 @@ class MachineContext : public sdbusplus::aserver::xyz::openbmc_project::MachineC
             {"serial-number", "serial-number"}};
 
         MachineContext::model("N/A");
-        //MachineContext::SerialNumber("N/A");
-        //MachineContext::macAddress("N/A");
-        //localMACAddress("N/A");
+        MachineContext::serial_number("N/A");
+        MachineContext::mac_address("N/A");
+        MachineContext::local_mac_address("N/A");
 
         for (std::pair<std::string, std::string> nodeData : supportedNodes)
         {
@@ -46,19 +46,19 @@ class MachineContext : public sdbusplus::aserver::xyz::openbmc_project::MachineC
 
             if (nodeData.first == "model")
             {
-                    model(nodeValue);
+                MachineContext::model(nodeValue);
             }
             else if (nodeData.first == "serial-number")
             {
-          //      serialNumber(nodeValue);
+                MachineContext::serial_number(nodeValue);
             }
             else if (nodeData.first == "mac-address")
             {
-            //    macAddress(nodeValue);
+                MachineContext::mac_address(nodeValue);
             }
             else if (nodeData.first == "serial-number")
             {
-             //   localMACAddress(nodeValue);
+              MachineContext::local_mac_address(nodeValue);
             }
         }
 	}
@@ -66,7 +66,7 @@ class MachineContext : public sdbusplus::aserver::xyz::openbmc_project::MachineC
 
 int main()
 {
-	constexpr auto path = MachineContextInstancePath;
+	constexpr auto path = MachineContext::instance_path;
 	
 	sdbusplus::async::context ctx;
 	sdbusplus::server::manager_t manager{ctx, path};
@@ -74,7 +74,7 @@ int main()
 	MachineContext c{ctx, path};
 	
 	ctx.spawn([](sdbusplus::async::context& ctx) -> sdbusplus::async::task<> {
-        ctx.request_name(MachineContextServiceName);
+        ctx.request_name(MachineContext::default_service);
         co_return;
     }(ctx));
 	
