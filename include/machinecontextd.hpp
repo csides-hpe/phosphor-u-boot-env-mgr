@@ -16,5 +16,34 @@
 
 #pragma once
 
+#include <xyz/openbmc_project/MachineContext/aserver.hpp>
+#include <sdbusplus/async.hpp>
+#include <map>
+
 static constexpr const char* nodeBasePath = "/proc/device-tree/"; 
+
+enum supportedNode { model, 
+                      serial_number,
+                      local_mac_address,
+                      mac_address
+};
+
+//map nodes to their path (relative to nodeBasePath)
+static const std::map<supportedNode, std::string> nodePaths = { { model, "model" },
+                                              { serial_number, "serial-number" },
+                                              { local_mac_address, "local-mac-address" },
+                                              { mac_address, "mac-address" } 
+                                              };
+
+class MachineContext : public sdbusplus::aserver::xyz::openbmc_project::MachineContext<MachineContext>
+{
+	public:
+    explicit MachineContext(sdbusplus::async::context& ctx, auto path) :
+        sdbusplus::aserver::xyz::openbmc_project::MachineContext<MachineContext>(ctx, path)
+    {
+		populateMachineContext();
+    }
+	
+	void populateMachineContext();
+};
 

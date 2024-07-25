@@ -1,76 +1,63 @@
+/*
+// Copyright (c) 2024 Hewlett Packard Enterprise
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+*/
+
 #include "machinecontextd.hpp"
-
-#include <xyz/openbmc_project/MachineContext/aserver.hpp>
-#include <sdbusplus/async.hpp>
-
-
-#include <iostream>
 #include <fstream>
 
-#include <vector>
-#include <string_view>
-
-class MachineContext : public sdbusplus::aserver::xyz::openbmc_project::MachineContext<MachineContext>
+void MachineContext::populateMachineContext()
 {
-	public:
-    explicit MachineContext(sdbusplus::async::context& ctx, auto path) :
-        sdbusplus::aserver::xyz::openbmc_project::MachineContext<MachineContext>(ctx, path)
+	//walk supported node paths
+    for (std::pair<supportedNode, std::string> nodeData : nodePaths)
     {
-		populateMachineContext();
+		std::string nodeValue;
+        std::string nodeRelativePath = nodeData.second;
+        std::string nodeFullPath = nodeBasePath + nodeRelativePath;
+        
+        std::ifstream fruStream;
+        fruStream.open(nodeFullPath);
+           
+		if (!fruStream || !std::getline(fruStream, nodeValue))
+            continue;
+
+		switch ((supportedNode)nodeData.first)
+		{
+			case supportedNode::model:
+				MachineContext::model(nodeValue);
+				break;
+			case supportedNode::serial_number:
+				MachineContext::serial_number(nodeValue);
+				break;
+			case supportedNode::mac_address:
+				MachineContext::mac_address(nodeValue);
+				break;
+			case supportedNode::local_mac_address:
+				MachineContext::local_mac_address(nodeValue);
+				break;
+			default:
+				break;
+		} 
     }
-	
-	private:
-	auto populateMachineContext()
-	{
-		std::vector<std::pair<std::string, std::string>> supportedNodes = {
-            {"model", "model"},
-            {"local-mac-address", "mac1"},
-            {"mac-address", "mac2"},
-            {"serial-number", "serial-number"}};
-
-        MachineContext::model("N/A");
-        MachineContext::serial_number("N/A");
-        MachineContext::mac_address("N/A");
-        MachineContext::local_mac_address("N/A");
-
-        for (std::pair<std::string, std::string> nodeData : supportedNodes)
-        {
-            std::string nodeRelativePath = nodeData.first;
-            std::string nodeFullPath = nodeBasePath + nodeRelativePath;
-            std::string nodeValue;
-
-            std::ifstream fruStream;
-            fruStream.open(nodeFullPath);
-            if (!fruStream || !std::getline(fruStream, nodeValue))
-                continue;
-
-            if (nodeData.first == "model")
-            {
-                MachineContext::model(nodeValue);
-            }
-            else if (nodeData.first == "serial-number")
-            {
-                MachineContext::serial_number(nodeValue);
-            }
-            else if (nodeData.first == "mac-address")
-            {
-                MachineContext::mac_address(nodeValue);
-            }
-            else if (nodeData.first == "serial-number")
-            {
-              MachineContext::local_mac_address(nodeValue);
-            }
-        }
-	}
 };
 
 int main()
 {
 	constexpr auto path = MachineContext::instance_path;
-	
 	sdbusplus::async::context ctx;
-	sdbusplus::server::manager_t manager{ctx, path};
 	
+	sdbusplus::server::manager_t manager{ctx, path};
 	MachineContext c{ctx, path};
 	
 	ctx.spawn([](sdbusplus::async::context& ctx) -> sdbusplus::async::task<> {
