@@ -16,37 +16,42 @@
 
 #pragma once
 
-#include <xyz/openbmc_project/MachineContext/aserver.hpp>
 #include <sdbusplus/async.hpp>
+#include <xyz/openbmc_project/MachineContext/aserver.hpp>
+
 #include <map>
 #include <vector>
 
-static constexpr const char* node_base_path = "/proc/device-tree/"; 
+static constexpr const char* node_base_path = "/proc/device-tree/";
 
-enum SupportedNodes { model, 
-                     serial_number,
-                     local_mac_address,
-                     mac_address
-};
-
-//map nodes to their path relative to node_base_path
-static const std::map<SupportedNodes, std::string> node_paths = { { SupportedNodes::model, "model" },
-                                              { SupportedNodes::serial_number, "serial-number" },
-                                              { SupportedNodes::local_mac_address, "local-mac-address" },
-                                              { SupportedNodes::mac_address, "mac-address" } 
-                                              };
-
-class MachineContext : public sdbusplus::aserver::xyz::openbmc_project::MachineContext<MachineContext>
+enum SupportedNodes
 {
-	public:
-    explicit MachineContext(sdbusplus::async::context& ctx, auto path) :
-        sdbusplus::aserver::xyz::openbmc_project::MachineContext<MachineContext>(ctx, path)
-    {
-		    populateMachineContext();
-    }
- 
-	void populateMachineContext();
- 
-  std::vector<uint8_t> bytesToDBusVec(char *byte_buffer, int buffer_size);
+    model,
+    serial_number,
+    local_mac_address,
+    mac_address
 };
 
+// map nodes to their path relative to node_base_path
+static const std::map<SupportedNodes, std::string> node_paths = {
+    {SupportedNodes::model, "model"},
+    {SupportedNodes::serial_number, "serial-number"},
+    {SupportedNodes::local_mac_address, "local-mac-address"},
+    {SupportedNodes::mac_address, "mac-address"}};
+
+class MachineContext :
+    public sdbusplus::aserver::xyz::openbmc_project::MachineContext<
+        MachineContext>
+{
+  public:
+    explicit MachineContext(sdbusplus::async::context& ctx, auto path) :
+        sdbusplus::aserver::xyz::openbmc_project::MachineContext<
+            MachineContext>(ctx, path)
+    {
+        populateMachineContext();
+    }
+
+    void populateMachineContext();
+
+    std::vector<uint8_t> bytesToDBusVec(char* byte_buffer, int buffer_size);
+};
