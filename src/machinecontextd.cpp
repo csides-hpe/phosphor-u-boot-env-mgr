@@ -17,40 +17,99 @@
 #include "machinecontextd.hpp"
 #include <fstream>
 
+
 void MachineContext::populateMachineContext()
 {
-	//walk supported node paths
-    for (std::pair<supportedNode, std::string> nodeData : nodePaths)
-    {
-		std::string nodeValue;
-        std::string nodeRelativePath = nodeData.second;
-        std::string nodeFullPath = nodeBasePath + nodeRelativePath;
-        
-        std::ifstream fruStream;
-        fruStream.open(nodeFullPath);
-           
-		if (!fruStream || !std::getline(fruStream, nodeValue))
-            continue;
+    int mac_buffer_size = 6; 
 
-		switch ((supportedNode)nodeData.first)
-		{
-			case supportedNode::model:
-				MachineContext::model(nodeValue);
-				break;
-			case supportedNode::serial_number:
-				MachineContext::serial_number(nodeValue);
-				break;
-			case supportedNode::mac_address:
-				MachineContext::mac_address(nodeValue);
-				break;
-			case supportedNode::local_mac_address:
-				MachineContext::local_mac_address(nodeValue);
-				break;
-			default:
-				break;
-		} 
-    }
+	//walk supported node paths
+    for (std::pair<SupportedNodes, std::string> node_data : node_paths)
+    {
+        std::string node_value_str;
+        
+        char *mac_buffer_bytes;
+        std::vector<uint8_t> node_value_bytes;
+        
+        std::string node_rel_path = node_data.second;
+        std::string node_full_path = node_base_path + node_rel_path;
+        
+        std::ifstream vpd_stream;
+        
+		    switch ((SupportedNodes)node_data.first)
+		    {
+			    case SupportedNodes::model:
+      
+              vpd_stream.open(node_full_path);
+           
+		          if (!vpd_stream || !std::getline(vpd_stream, node_value_str))
+                  continue;
+          
+				      MachineContext::model(node_value_str);
+        
+				      break;
+        
+			    case SupportedNodes::serial_number:
+      
+             vpd_stream.open(node_full_path);
+           
+		         if (!vpd_stream || !std::getline(vpd_stream, node_value_str))
+                 continue;
+          
+				     MachineContext::serial_number(node_value_str);
+        
+			     	break;
+        
+		     	case SupportedNodes::mac_address:
+      
+             vpd_stream.open(node_full_path, std::fstream::binary);
+        
+             if (!vpd_stream)
+                 continue;
+            
+             mac_buffer_bytes = new char [mac_buffer_size];
+        
+             if (!vpd_stream.read(mac_buffer_bytes, mac_buffer_size))
+                 continue;
+            
+             node_value_bytes = bytesToDBusVec(mac_buffer_bytes, mac_buffer_size); 
+		     		 MachineContext::mac_address(std::move(node_value_bytes));
+				
+             break;
+        
+	     		case SupportedNodes::local_mac_address:
+      
+             vpd_stream.open(node_full_path, std::fstream::binary);
+        
+             if (!vpd_stream)
+                 continue;
+            
+             mac_buffer_bytes = new char [mac_buffer_size];
+        
+             if (!vpd_stream.read(mac_buffer_bytes, mac_buffer_size))
+                 continue;
+           
+             node_value_bytes = bytesToDBusVec(mac_buffer_bytes, mac_buffer_size); 
+				     MachineContext::local_mac_address(std::move(node_value_bytes));
+				
+             break;
+        
+	     		default:
+     				break;
+        }
+    }    
 };
+
+std::vector<uint8_t> MachineContext::bytesToDBusVec(char *byte_buffer, int buffer_size)
+{
+  std::vector<uint8_t> byte_vec;
+  
+  for (int i = 0; i < buffer_size; i++) 
+  {
+    byte_vec.push_back(byte_buffer[i]);
+  }
+  
+  return byte_vec;
+}
 
 int main()
 {

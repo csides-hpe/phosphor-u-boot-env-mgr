@@ -19,20 +19,21 @@
 #include <xyz/openbmc_project/MachineContext/aserver.hpp>
 #include <sdbusplus/async.hpp>
 #include <map>
+#include <vector>
 
-static constexpr const char* nodeBasePath = "/proc/device-tree/"; 
+static constexpr const char* node_base_path = "/proc/device-tree/"; 
 
-enum supportedNode { model, 
-                      serial_number,
-                      local_mac_address,
-                      mac_address
+enum SupportedNodes { model, 
+                     serial_number,
+                     local_mac_address,
+                     mac_address
 };
 
-//map nodes to their path (relative to nodeBasePath)
-static const std::map<supportedNode, std::string> nodePaths = { { model, "model" },
-                                              { serial_number, "serial-number" },
-                                              { local_mac_address, "local-mac-address" },
-                                              { mac_address, "mac-address" } 
+//map nodes to their path relative to node_base_path
+static const std::map<SupportedNodes, std::string> node_paths = { { SupportedNodes::model, "model" },
+                                              { SupportedNodes::serial_number, "serial-number" },
+                                              { SupportedNodes::local_mac_address, "local-mac-address" },
+                                              { SupportedNodes::mac_address, "mac-address" } 
                                               };
 
 class MachineContext : public sdbusplus::aserver::xyz::openbmc_project::MachineContext<MachineContext>
@@ -41,9 +42,11 @@ class MachineContext : public sdbusplus::aserver::xyz::openbmc_project::MachineC
     explicit MachineContext(sdbusplus::async::context& ctx, auto path) :
         sdbusplus::aserver::xyz::openbmc_project::MachineContext<MachineContext>(ctx, path)
     {
-		populateMachineContext();
+		    populateMachineContext();
     }
-	
+ 
 	void populateMachineContext();
+ 
+  std::vector<uint8_t> bytesToDBusVec(char *byte_buffer, int buffer_size);
 };
 
