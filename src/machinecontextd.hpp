@@ -17,7 +17,8 @@
 #pragma once
 
 #include <sdbusplus/async.hpp>
-#include <xyz/openbmc_project/MachineContext/aserver.hpp>
+#include <xyz/openbmc_project/Inventory/Decorator/Asset/aserver.hpp>
+#include <xyz/openbmc_project/Inventory/Item/NetworkInterface/aserver.hpp>
 
 #include <map>
 #include <vector>
@@ -36,22 +37,24 @@ enum SupportedNodes
 static const std::map<SupportedNodes, std::string> node_paths = {
     {SupportedNodes::model, "model"},
     {SupportedNodes::serial_number, "serial-number"},
-    {SupportedNodes::local_mac_address, "local-mac-address"},
-    {SupportedNodes::mac_address, "mac-address"}};
+    {SupportedNodes::local_mac_address, "local-mac-address"}/*,
+    {SupportedNodes::mac_address, "mac-address"} */
+  };
 
 class MachineContext :
-    public sdbusplus::aserver::xyz::openbmc_project::MachineContext<
-        MachineContext>
+    public sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::Asset<MachineContext>, 
+    public sdbusplus::aserver::xyz::openbmc_project::inventory::item::NetworkInterface<MachineContext>
 {
   public:
     explicit MachineContext(sdbusplus::async::context& ctx, auto path) :
-        sdbusplus::aserver::xyz::openbmc_project::MachineContext<
-            MachineContext>(ctx, path)
+        sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::Asset<MachineContext>(ctx, path), 
+        sdbusplus::aserver::xyz::openbmc_project::inventory::item::NetworkInterface<MachineContext>(ctx, path)
     {
-        populateMachineContext();
+      populateMachineContext();
     }
-
+    
     void populateMachineContext();
-
-    std::vector<uint8_t> bytesToDBusVec(char* byte_buffer, int buffer_size);
+    
+    std::vector<uint8_t> bytesToDBusVec(char* byte_buffer, int buffer_size); //takes an array of bytes and returns a vector of them
+    std::string bytesToHexString(char* byte_buffer, int buffer_size); //takes an array of bytes and returns a human-readable hex string
 };
