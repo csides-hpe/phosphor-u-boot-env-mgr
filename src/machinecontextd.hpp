@@ -37,8 +37,7 @@ enum SupportedNodes
 static const std::map<SupportedNodes, std::string> node_paths = {
     {SupportedNodes::model, "model"},
     {SupportedNodes::serial_number, "serial-number"},
-    {SupportedNodes::local_mac_address, "local-mac-address"}
-};
+    {SupportedNodes::local_mac_address, "local-mac-address"}};
 
 class MachineContext :
     public sdbusplus::async::server_t<

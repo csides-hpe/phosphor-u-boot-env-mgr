@@ -55,7 +55,7 @@ void MachineContext::populateMachineContext()
 
                 if (!vpd_stream || !std::getline(vpd_stream, node_value_str))
                     continue;
-                
+
                 MachineContext::Asset::serial_number(node_value_str);
 
                 break;
@@ -69,15 +69,16 @@ void MachineContext::populateMachineContext()
 
                 mac_buffer_bytes = new char[mac_buffer_size];
 
-                if (!vpd_stream.read(mac_buffer_bytes, mac_buffer_size)) 
+                if (!vpd_stream.read(mac_buffer_bytes, mac_buffer_size))
                     continue;
 
-                node_value_bytes = bytesToDBusVec(mac_buffer_bytes, mac_buffer_size);
-                
+                node_value_bytes = bytesToDBusVec(mac_buffer_bytes,
+                                                  mac_buffer_size);
+
                 MachineContext::local_mac_address(std::move(node_value_bytes));
 
                 break;
-                
+
             default:
                 break;
         }
@@ -101,7 +102,7 @@ std::string MachineContext::bytesToHexString(char* byte_buffer, int buffer_size)
 {
     std::stringstream hex_val;
     hex_val << "0x";
-    hex_val << std::hex; 
+    hex_val << std::hex;
 
     for (int i = 0; i < buffer_size; i++)
     {
@@ -113,8 +114,7 @@ std::string MachineContext::bytesToHexString(char* byte_buffer, int buffer_size)
 
 int main()
 {
-    constexpr auto path =
-        "/xyz/openbmc_project/Inventory/MachineContext";
+    constexpr auto path = "/xyz/openbmc_project/Inventory/MachineContext";
     sdbusplus::async::context ctx;
 
     sdbusplus::server::manager_t manager{ctx, path};
