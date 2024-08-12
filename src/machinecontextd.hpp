@@ -59,10 +59,6 @@ class MachineContext :
 
     void populateMachineContext();
 
-    std::vector<uint8_t>
-        bytesToDBusVec(char* byte_buffer,
-                       int buffer_size); // takes an array of bytes and returns
-                                         // a vector of them
     std::string bytesToHexString(
         char* byte_buffer,
         int buffer_size); // takes an array of bytes and returns a

@@ -28,6 +28,7 @@ void MachineContext::populateMachineContext()
     for (std::pair<SupportedNodes, std::string> node_data : node_paths)
     {
         std::string node_value_str;
+        char* mac_buffer_bytes;
 
         std::string node_rel_path = node_data.second;
         std::string node_full_path = node_base_path + node_rel_path;
@@ -60,9 +61,6 @@ void MachineContext::populateMachineContext()
 
             case SupportedNodes::local_mac_address:
 
-                char* mac_buffer_bytes;
-                std::vector<uint8_t> node_value_bytes;
-
                 vpd_stream.open(node_full_path, std::fstream::binary);
 
                 if (!vpd_stream)
@@ -73,10 +71,10 @@ void MachineContext::populateMachineContext()
                 if (!vpd_stream.read(mac_buffer_bytes, mac_buffer_size))
                     continue;
 
-                node_value_bytes = bytesToDBusVec(mac_buffer_bytes,
+                node_value_str = bytesToHexString(mac_buffer_bytes,
                                                   mac_buffer_size);
 
-                MachineContext::local_mac_address(std::move(node_value_bytes));
+                MachineContext::local_mac_address(node_value_str));
 
                 break;
 
@@ -85,19 +83,6 @@ void MachineContext::populateMachineContext()
         }
     }
 };
-
-std::vector<uint8_t> MachineContext::bytesToDBusVec(char* byte_buffer,
-                                                    int buffer_size)
-{
-    std::vector<uint8_t> byte_vec;
-
-    for (int i = 0; i < buffer_size; i++)
-    {
-        byte_vec.push_back(byte_buffer[i]);
-    }
-
-    return byte_vec;
-}
 
 std::string MachineContext::bytesToHexString(char* byte_buffer, int buffer_size)
 {
