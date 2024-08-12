@@ -37,27 +37,37 @@ enum SupportedNodes
 static const std::map<SupportedNodes, std::string> node_paths = {
     {SupportedNodes::model, "model"},
     {SupportedNodes::serial_number, "serial-number"},
-    {SupportedNodes::local_mac_address, "local-mac-address"}/*,
-    {SupportedNodes::mac_address, "mac-address"} */
-  };
+    {SupportedNodes::local_mac_address, "local-mac-address"} /*,
+     {SupportedNodes::mac_address, "mac-address"} */
+};
 
 class MachineContext :
-    public sdbusplus::async::server_t<MachineContext,
-          sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::Asset,
-          sdbusplus::aserver::xyz::openbmc_project::inventory::item::NetworkInterface>
+    public sdbusplus::async::server_t<
+        MachineContext,
+        sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::Asset,
+        sdbusplus::aserver::xyz::openbmc_project::inventory::item::
+            NetworkInterface>
 {
   public:
     explicit MachineContext(sdbusplus::async::context& ctx, auto path) :
-        sdbusplus::async::server_t<
-            MachineContext,
-            sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::Asset,
-            sdbusplus::aserver::xyz::openbmc_project::inventory::item::NetworkInterface>(ctx, path)
+        sdbusplus::async::server_t<MachineContext,
+                                   sdbusplus::aserver::xyz::openbmc_project::
+                                       inventory::decorator::Asset,
+                                   sdbusplus::aserver::xyz::openbmc_project::
+                                       inventory::item::NetworkInterface>(ctx,
+                                                                          path)
     {
-      populateMachineContext();
+        populateMachineContext();
     }
-    
+
     void populateMachineContext();
-    
-    std::vector<uint8_t> bytesToDBusVec(char* byte_buffer, int buffer_size); //takes an array of bytes and returns a vector of them
-    std::string bytesToHexString(char* byte_buffer, int buffer_size); //takes an array of bytes and returns a human-readable hex string
+
+    std::vector<uint8_t>
+        bytesToDBusVec(char* byte_buffer,
+                       int buffer_size); // takes an array of bytes and returns
+                                         // a vector of them
+    std::string bytesToHexString(
+        char* byte_buffer,
+        int buffer_size); // takes an array of bytes and returns a
+                          // human-readable hex string
 };
