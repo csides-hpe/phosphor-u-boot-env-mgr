@@ -30,7 +30,6 @@ void MachineContext::populateMachineContext()
         std::string node_value_str;
 
         char* mac_buffer_bytes;
-        // std::vector<uint8_t> node_value_bytes;
 
         std::string node_rel_path = node_data.second;
         std::string node_full_path = node_base_path + node_rel_path;
@@ -56,12 +55,12 @@ void MachineContext::populateMachineContext()
 
                 if (!vpd_stream || !std::getline(vpd_stream, node_value_str))
                     continue;
-
+                
                 MachineContext::Asset::serial_number(node_value_str);
 
                 break;
 
-            case SupportedNodes::mac_address:
+            case SupportedNodes::local_mac_address:
 
                 vpd_stream.open(node_full_path, std::fstream::binary);
 
@@ -70,34 +69,15 @@ void MachineContext::populateMachineContext()
 
                 mac_buffer_bytes = new char[mac_buffer_size];
 
-                if (!vpd_stream.read(mac_buffer_bytes, mac_buffer_size))
+                if (!vpd_stream.read(mac_buffer_bytes, mac_buffer_size)) 
                     continue;
 
-                node_value_str = bytesToHexString(mac_buffer_bytes,
-                                                  mac_buffer_size);
-                MachineContext::NetworkInterface::mac_address(node_value_str);
+                node_value_bytes = bytesToDBusVec(mac_buffer_bytes, mac_buffer_size);
+                
+                MachineContext::local_mac_address(std::move(node_value_bytes));
 
                 break;
-                /*
-                            case SupportedNodes::local_mac_address:
-
-                                vpd_stream.open(node_full_path,
-                   std::fstream::binary);
-
-                                if (!vpd_stream)
-                                    continue;
-
-                                mac_buffer_bytes = new char[mac_buffer_size];
-
-                                if (!vpd_stream.read(mac_buffer_bytes,
-                   mac_buffer_size)) continue;
-
-                                node_value_bytes =
-                   bytesToDBusVec(mac_buffer_bytes, mac_buffer_size);
-                                MachineContext::local_mac_address(std::move(node_value_bytes));
-
-                                break;
-                */
+                
             default:
                 break;
         }
@@ -121,13 +101,11 @@ std::string MachineContext::bytesToHexString(char* byte_buffer, int buffer_size)
 {
     std::stringstream hex_val;
     hex_val << "0x";
-    hex_val << std::hex; // = "0x";
+    hex_val << std::hex; 
 
     for (int i = 0; i < buffer_size; i++)
     {
         hex_val << std::setw(2) << std::setfill('0') << (int)byte_buffer[i];
-        // hex_val+= byte_buffer[i]; //Todo: needs actual translation from byte
-        // to displayable hex-value
     }
 
     return hex_val.str();
@@ -136,7 +114,7 @@ std::string MachineContext::bytesToHexString(char* byte_buffer, int buffer_size)
 int main()
 {
     constexpr auto path =
-        "/xyz/openbmc_project/Inventory/MachineContext"; // MachineContext::instance_path;
+        "/xyz/openbmc_project/Inventory/MachineContext";
     sdbusplus::async::context ctx;
 
     sdbusplus::server::manager_t manager{ctx, path};
