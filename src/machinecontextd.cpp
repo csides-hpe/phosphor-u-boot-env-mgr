@@ -29,8 +29,6 @@ void MachineContext::populateMachineContext()
     {
         std::string node_value_str;
 
-        char* mac_buffer_bytes;
-
         std::string node_rel_path = node_data.second;
         std::string node_full_path = node_base_path + node_rel_path;
 
@@ -61,6 +59,9 @@ void MachineContext::populateMachineContext()
                 break;
 
             case SupportedNodes::local_mac_address:
+
+                char* mac_buffer_bytes;
+                std::vector<uint8_t> node_value_bytes;
 
                 vpd_stream.open(node_full_path, std::fstream::binary);
 
