@@ -74,7 +74,7 @@ void MachineContext::populateMachineContext()
                 node_value_str = bytesToHexString(mac_buffer_bytes,
                                                   mac_buffer_size);
 
-                MachineContext::local_mac_address(node_value_str));
+                MachineContext::NetworkInterface::mac_address(node_value_str);
 
                 break;
 
