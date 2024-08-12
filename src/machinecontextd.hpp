@@ -29,8 +29,7 @@ enum SupportedNodes
 {
     model,
     serial_number,
-    local_mac_address,
-    mac_address
+    local_mac_address
 };
 
 // map nodes to their path relative to node_base_path
