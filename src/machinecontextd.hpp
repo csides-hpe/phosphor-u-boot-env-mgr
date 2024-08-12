@@ -42,13 +42,16 @@ static const std::map<SupportedNodes, std::string> node_paths = {
   };
 
 class MachineContext :
-    public sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::Asset<MachineContext>, 
-    public sdbusplus::aserver::xyz::openbmc_project::inventory::item::NetworkInterface<MachineContext>
+    public sdbusplus::async::server_t<MachineContext,
+          sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::Asset,
+          sdbusplus::aserver::xyz::openbmc_project::inventory::item::NetworkInterface>
 {
   public:
     explicit MachineContext(sdbusplus::async::context& ctx, auto path) :
-        sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::Asset<MachineContext>(ctx, path), 
-        sdbusplus::aserver::xyz::openbmc_project::inventory::item::NetworkInterface<MachineContext>(ctx, path)
+        sdbusplus::async::server_t<
+            MachineContext,
+            sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::Asset,
+            sdbusplus::aserver::xyz::openbmc_project::inventory::item::NetworkInterface>(ctx, path)
     {
       populateMachineContext();
     }
