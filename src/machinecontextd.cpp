@@ -19,13 +19,47 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
+#include <vector>
+
+//in the future, would like to have this set via config file, possibly 
+//with bundles of nodes associated with a given node_base_path
+const char* DTParse::node_base_path = "/proc/device-tree/";
+
+const char* DTParse::watched_nodes = {
+    {SupportedNodes::model, "model"},
+    {SupportedNodes::serial_number, "serial-number"}}
+    //{SupportedNodes::local_mac_address, "/soc/??/local-mac-address"}}
+    
+
+    //would be trivial to include a check for nodes at deeper paths...
+    //but in the future, it could make sense to have entire blocks
+    //that only get read if the base-path is present
+    //
+    //For now, let's assume we only need to read from a few nodes, and 
+    //that designing for more is over-engineering.
+    //
+    //But if we did start caring about reading more (way more?) data from DT,
+    //we could move the node_paths and base_path into the class and then
+    //create one class for each basepath we care about with a set of associated notes.
+    //
+    //For now, I think this is fine 
+
+using DTParse;
+
+MachineContext(sdbusplus::async::context& ctx, auto path) :
+        sdbusplus::async::server_t<MachineContext,
+                                   sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::Asset,
+                                   sdbusplus::aserver::xyz::openbmc_project::inventory::item::NetworkInterface>(ctx, path)
+    {
+        populateMachineContext();
+    }
 
 void MachineContext::populateMachineContext()
 {
     int mac_buffer_size = 6;
 
     // walk supported node paths
-    for (std::pair<SupportedNodes, std::string> node_data : node_paths)
+    for (std::pair<SupportedNodes, std::string> node_data : watched_nodes)
     {
         std::string node_value_str;
         char* mac_buffer_bytes;
