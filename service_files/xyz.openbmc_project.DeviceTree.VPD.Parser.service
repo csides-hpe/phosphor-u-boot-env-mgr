@@ -1,0 +1,10 @@
+[Unit]
+Description= parses device tree nodes to make data available on d-bus
+
+[Service]
+ExecStart=/usr/bin/dt-vpd-parsed
+Type=dbus
+BusName=xyz.openbmc_project.MachineContext
+
+[Install]
+WantedBy=basic.target

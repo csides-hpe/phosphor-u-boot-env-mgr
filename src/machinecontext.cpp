@@ -14,20 +14,39 @@
 // limitations under the License.
 */
 
-#include "machinecontextd.hpp"
+#include "machinecontext.hpp"
 
 #include <fstream>
 #include <iomanip>
 #include <sstream>
 #include <vector>
+#include <map>
 
 //in the future, would like to have this set via config file, possibly 
 //with bundles of nodes associated with a given node_base_path
-const char* DTParse::node_base_path = "/proc/device-tree/";
+//const char*
 
-const char* DTParse::watched_nodes = {
-    {SupportedNodes::model, "model"},
-    {SupportedNodes::serial_number, "serial-number"}}
+namespace DTParse {
+
+constexpr const char* node_base_path = "/proc/device-tree/"; //should this be static? does constexpr apply? what about 'const' on top?
+    //static means it could be accessed from outside a class object (so has to be static to be declared up here)
+    //constexpr means that we're telling the compiler the value will be set before compiletime, not at runtime
+    //const means that the value won't be changing. = "/proc/device-tree/";
+
+enum SupportedNodes
+{
+    model,
+    serial_number,
+    local_mac_address
+};
+
+static const std::map<SupportedNodes, std::string> watched_nodes = {
+        {SupportedNodes::model, "model"},
+        {SupportedNodes::serial_number, "serial-number"} };
+        
+};
+
+using namespace DTParse;
     //{SupportedNodes::local_mac_address, "/soc/??/local-mac-address"}}
     
 
@@ -44,9 +63,7 @@ const char* DTParse::watched_nodes = {
     //
     //For now, I think this is fine 
 
-using DTParse;
-
-MachineContext(sdbusplus::async::context& ctx, auto path) :
+MachineContext::MachineContext(sdbusplus::async::context& ctx, auto path) :
         sdbusplus::async::server_t<MachineContext,
                                    sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::Asset,
                                    sdbusplus::aserver::xyz::openbmc_project::inventory::item::NetworkInterface>(ctx, path)
@@ -69,7 +86,7 @@ void MachineContext::populateMachineContext()
 
         std::ifstream vpd_stream;
 
-        switch ((SupportedNodes)node_data.first)
+        switch (node_data.first)
         {
             case SupportedNodes::model:
 
@@ -130,7 +147,7 @@ std::string MachineContext::bytesToHexString(char* byte_buffer, int buffer_size)
     }
 
     return hex_val.str();
-}
+};
 
 int main()
 {
@@ -138,14 +155,15 @@ int main()
     sdbusplus::async::context ctx;
 
     sdbusplus::server::manager_t manager{ctx, path};
+
     MachineContext c{ctx, path};
 
     ctx.spawn([](sdbusplus::async::context& ctx) -> sdbusplus::async::task<> {
-        ctx.request_name("xyz.openbmc_project.MachineContext");
+        ctx.request_name("xyz.openbmc_project.Inventory.MachineContext");
         co_return;
     }(ctx));
 
     ctx.run();
 
     return 0;
-}
+};

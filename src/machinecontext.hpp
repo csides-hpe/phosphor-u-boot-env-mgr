@@ -22,26 +22,15 @@
 
 #include <map>
 
-namespace DTParse {
-
     //Q: is it important to have this stuff all in a namespace? Or is anon better? (Check style guide, I think there's info)
 
-static constexpr const char* node_base_path; //should this be static? does constexpr apply? what about 'const' on top?
-    //static means it could be accessed from outside a class object (so has to be static to be declared up here)
-    //constexpr means that we're telling the compiler the value will be set before compiletime, not at runtime
-    //const means that the value won't be changing.
+
 
 // map nodes to their path relative to node_base_path. I think both of these should be inside the class so that they can be swapped out - maybe 
 // one per 'base path' we want to read code from? 
 // would also be relatively trivial to just include full paths in the implimentation of code
-static const std::map<SupportedNodes, std::string> watched_nodes; //
 
-enum SupportedNodes
-{
-    model,
-    serial_number,
-    local_mac_address
-};
+//static const std::map<SupportedNodes, std::string> watched_nodes; //
 
 class MachineContext :
     public sdbusplus::async::server_t<
@@ -61,4 +50,3 @@ class MachineContext :
         int buffer_size); // takes an array of bytes and returns a
                           // human-readable hex string
 };
-}
