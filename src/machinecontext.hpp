@@ -40,8 +40,24 @@ class MachineContext :
             NetworkInterface>
 {
   public:
-    explicit MachineContext(sdbusplus::async::context& ctx, auto path);
+    explicit MachineContext(sdbusplus::async::context& ctx, auto path) :
+        sdbusplus::async::server_t<MachineContext,
+                                   sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::Asset,
+                                   sdbusplus::aserver::xyz::openbmc_project::inventory::item::NetworkInterface>(ctx, path)
+    {
+        populateMachineContext();
+    }
+    //explicit MachineContext(sdbusplus::async::context& ctx, auto path); 
 
+/* //Does build
+    explicit MachineContext(sdbusplus::async::context& ctx, auto path) :
+        sdbusplus::async::server_t<MachineContext,
+                                   sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::Asset,
+                                   sdbusplus::aserver::xyz::openbmc_project::inventory::item::NetworkInterface>(ctx, path)
+    {
+        populateMachineContext();
+    }
+*/
     void populateMachineContext();
 
     //is it fine to include this as part of the class? Or would it be better to have this as an 'anonymous' function with no class to it?

@@ -43,9 +43,9 @@ enum SupportedNodes
 static const std::map<SupportedNodes, std::string> watched_nodes = {
         {SupportedNodes::model, "model"},
         {SupportedNodes::serial_number, "serial-number"} };
-        
-};
 
+};
+        
 using namespace DTParse;
     //{SupportedNodes::local_mac_address, "/soc/??/local-mac-address"}}
     
@@ -58,18 +58,10 @@ using namespace DTParse;
     //that designing for more is over-engineering.
     //
     //But if we did start caring about reading more (way more?) data from DT,
-    //we could move the node_paths and base_path into the class and then
-    //create one class for each basepath we care about with a set of associated notes.
+    //we could move the node_paths and base_path into the MachineContext class and then
+    //create one class for each basepath we care about with a set of associated nodes.
     //
     //For now, I think this is fine 
-
-MachineContext::MachineContext(sdbusplus::async::context& ctx, auto path) :
-        sdbusplus::async::server_t<MachineContext,
-                                   sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::Asset,
-                                   sdbusplus::aserver::xyz::openbmc_project::inventory::item::NetworkInterface>(ctx, path)
-    {
-        populateMachineContext();
-    }
 
 void MachineContext::populateMachineContext()
 {
@@ -148,7 +140,8 @@ std::string MachineContext::bytesToHexString(char* byte_buffer, int buffer_size)
 
     return hex_val.str();
 };
-
+//}
+/*
 int main()
 {
     constexpr auto path = "/xyz/openbmc_project/Inventory/MachineContext";
@@ -167,3 +160,8 @@ int main()
 
     return 0;
 };
+*/
+
+
+
+
