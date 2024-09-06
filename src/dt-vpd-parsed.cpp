@@ -9,7 +9,6 @@ int main()
 
     MachineContext c{ctx, path};
     ctx.spawn([](sdbusplus::async::context& ctx) -> sdbusplus::async::task<> {
-        //ctx.request_name("xyz.openbmc_project.Inventory.MachineContext");
         ctx.request_name("xyz.openbmc_project.Inventory.MachineContext");
         co_return;
     }(ctx));
