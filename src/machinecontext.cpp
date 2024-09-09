@@ -15,59 +15,56 @@
 */
 
 #include "machinecontext.hpp"
-
 #include <fstream>
-#include <iomanip>
-#include <sstream>
-#include <vector>
 #include <map>
 
 namespace DTParse {
 
-static constexpr const char* node_base_path = "/proc/device-tree/"; 
+    static constexpr const char* node_base_path = "/proc/device-tree/"; 
 
-enum SupportedNodes
-{
-    model,
-    serial_number
+    enum SupportedNode
+    {
+        model,
+        serial_number
+    };
+
+    //associate nodes with a path relative to node_base_path
+    static const std::map<SupportedNode, std::string> node_rel_paths = {
+            {SupportedNode::model, "model"},
+            {SupportedNode::serial_number, "serial-number"} 
+    };
 };
-
-static const std::map<SupportedNodes, std::string> watched_nodes = {
-        {SupportedNodes::model, "model"},
-        {SupportedNodes::serial_number, "serial-number"} };
-};
-
-using namespace DTParse;
 
 void MachineContext::populateMachineContext()
 {
-
+    typedef DTParse::SupportedNode DT_Node;
+    
     // walk supported node paths
-    for (std::pair<SupportedNodes, std::string> node_data : watched_nodes)
+    for (std::pair<DT_Node, std::string> node_data : DTParse::node_rel_paths)
     {
-        std::string node_value_str;
+        std::string node_value;
 
         std::string node_rel_path = node_data.second;
-        std::string node_full_path = node_base_path + node_rel_path;
+        std::string node_full_path = DTParse::node_base_path + node_rel_path;
 
         std::ifstream vpd_stream;
 
         vpd_stream.open(node_full_path);
 
-        if (!vpd_stream || !std::getline(vpd_stream, node_value_str))
+        if (!vpd_stream || !std::getline(vpd_stream, node_value))
             continue;
 
         switch (node_data.first)
         {
-            case SupportedNodes::model:
+            case DT_Node::model:
     
-                MachineContext::Asset::model(node_value_str);
+                MachineContext::Asset::model(node_value);
 
                 break;
 
-            case SupportedNodes::serial_number:
+            case DT_Node::serial_number:
 
-                MachineContext::Asset::serial_number(node_value_str);
+                MachineContext::Asset::serial_number(node_value);
 
                 break;
 

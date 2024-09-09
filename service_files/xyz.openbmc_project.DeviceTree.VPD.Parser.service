@@ -1,5 +1,5 @@
 [Unit]
-Description= parses device tree nodes to make data available on d-bus
+Description=Makes data from device-tree nodes avaliable thru D-Bus
 
 [Service]
 ExecStart=/usr/bin/dt-vpd-parsed
