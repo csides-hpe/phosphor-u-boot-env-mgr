@@ -22,15 +22,16 @@
 #include <map>
 
 class MachineContext :
-    public sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::Asset<MachineContext>
+    public sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::
+        Asset<MachineContext>
 {
   public:
     MachineContext(sdbusplus::async::context& ctx, auto path) :
-        sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::Asset<MachineContext>(ctx, path)
+        sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::Asset<
+            MachineContext>(ctx, path)
     {
         populateMachineContext();
     }
-    
-    void populateMachineContext();
 
+    void populateMachineContext();
 };

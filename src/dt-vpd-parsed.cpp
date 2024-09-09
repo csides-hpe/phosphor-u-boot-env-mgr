@@ -16,6 +16,4 @@ int main()
     ctx.run();
 
     return 0;
-}; 
-
-
+};

@@ -15,30 +15,31 @@
 */
 
 #include "machinecontext.hpp"
+
 #include <fstream>
 #include <map>
 
-namespace DTParse {
+namespace DTParse
+{
 
-    static constexpr const char* node_base_path = "/proc/device-tree/"; 
+static constexpr const char* node_base_path = "/proc/device-tree/";
 
-    enum SupportedNode
-    {
-        model,
-        serial_number
-    };
-
-    //associate nodes with a path relative to node_base_path
-    static const std::map<SupportedNode, std::string> node_rel_paths = {
-            {SupportedNode::model, "model"},
-            {SupportedNode::serial_number, "serial-number"} 
-    };
+enum SupportedNode
+{
+    model,
+    serial_number
 };
+
+// associate nodes with a path relative to node_base_path
+static const std::map<SupportedNode, std::string> node_rel_paths = {
+    {SupportedNode::model, "model"},
+    {SupportedNode::serial_number, "serial-number"}};
+}; // namespace DTParse
 
 void MachineContext::populateMachineContext()
 {
     using DTNode = DTParse::SupportedNode;
-    
+
     // walk supported node paths
     for (std::pair<DTNode, std::string> node_data : DTParse::node_rel_paths)
     {
@@ -57,7 +58,7 @@ void MachineContext::populateMachineContext()
         switch (node_data.first)
         {
             case DTNode::model:
-    
+
                 MachineContext::Asset::model(node_value);
 
                 break;
