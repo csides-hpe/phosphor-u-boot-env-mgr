@@ -37,10 +37,10 @@ namespace DTParse {
 
 void MachineContext::populateMachineContext()
 {
-    typedef DTParse::SupportedNode DT_Node;
+    using DTNode = DTParse::SupportedNode;
     
     // walk supported node paths
-    for (std::pair<DT_Node, std::string> node_data : DTParse::node_rel_paths)
+    for (std::pair<DTNode, std::string> node_data : DTParse::node_rel_paths)
     {
         std::string node_value;
 
@@ -56,13 +56,13 @@ void MachineContext::populateMachineContext()
 
         switch (node_data.first)
         {
-            case DT_Node::model:
+            case DTNode::model:
     
                 MachineContext::Asset::model(node_value);
 
                 break;
 
-            case DT_Node::serial_number:
+            case DTNode::serial_number:
 
                 MachineContext::Asset::serial_number(node_value);
 
